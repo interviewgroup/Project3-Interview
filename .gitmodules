@@ -1,0 +1,3 @@
+[submodule "Gateway-DIscovery"]
+	path = Gateway-DIscovery
+	url = https://github.com/interviewgroup/Project3-Interview.git

@@ -8,7 +8,7 @@ Hello there teammates!
 ```
 
 ## Requirements
-* The system shall be able to perform the following functionalities:
+The system shall be able to perform the following functionalities:
 * Interview tracking 
     * Manager role
         * Create interview in system

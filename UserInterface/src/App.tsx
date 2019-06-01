@@ -2,6 +2,7 @@ import * as React from 'react';
 import './include/bootstrap';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
+import './24Hreport.scss';
 import { store } from './Store';
 import AppNav from './components/nav/nav.component';
 import { BrowserRouter,  Switch, Route } from 'react-router-dom';

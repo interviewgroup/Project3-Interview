@@ -1,35 +1,38 @@
 import React from 'react';
 import ReactPaginate from 'react-paginate';
 import { IUser } from '../../model/user.model';
-import { Link } from 'react-router-dom';
 import { interviewClient } from '../../axios/sms-clients/interview-client';
-import './24Hreport.scss';
+//import './24Hreport.scss';
+import { Redirect } from 'react-router';
 export interface interview24RequestProps {
-    Users:IUser[]
-}
- 
-export interface interview24State {
-    Users
+    Users: IUser[]
 }
 
-export interface interview24FAssoc {
-    Users:IUser[]
-}
- 
-export class interview24Request extends React.Component<any, any> {
+// export interface interview24State {
+//     Users
+//     //redirect: boolean
+// }
+
+// export interface interview24FAssoc {
+//     Users:IUser[]
+// }
+
+export class interview24Request extends React.PureComponent<any, any> {
     constructor(props: interview24RequestProps) {
         super(props);
         this.state = {
             Users: [
                 { undefined },
-              ],
-            totalPages:0,
-            currentPage:0,
-            pageSize:4
+            ],
+            totalPages: 0,
+            currentPage: 0,
+            pageSize: 4,
+            redirect: false
         };
+
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.fetchDbInfo(0);
     }
 
@@ -39,66 +42,78 @@ export class interview24Request extends React.Component<any, any> {
         this.fetchDbInfo(selected);
     }
 
-    async fetchDbInfo(pageNumber:number){
+    async fetchDbInfo(pageNumber: number) {
         this.setState({
             ...this.state
-          },
-          async () => {
-              try {
-                  console.log(pageNumber+'x'+this.state.pageSize)
-                  const res = await interviewClient.fetch24(pageNumber, this.state.pageSize);
-                  console.log(res.data);
-                  this.setState({
-                    Users: res.data.content,
-                    totalPages: res.data.totalPages,
-                    currentPage: pageNumber
-                  });
-              } catch (err) {
-                  console.log(err);
-              }
-          }
+        },
+            async () => {
+                try {
+                    console.log(pageNumber + 'x' + this.state.pageSize)
+                    const res = await interviewClient.fetch24(pageNumber, this.state.pageSize);
+                    console.log(res.data);
+                    this.setState({
+                        Users: res.data.content,
+                        totalPages: res.data.totalPages,
+                        currentPage: pageNumber
+                    });
+                } catch (err) {
+                    console.log(err);
+                }
+            }
         );
     }
 
-    render() { 
+    updateRedirecrt = (redirecting: boolean) => {
+        console.log('redirect');
+        this.setState({ redirect: redirecting })
+    }
+
+
+    render() {
         const assocInterviewRows = this.state.Users.map((User) => {
             return (
                 <tr>
                     <td>{User.assocName}</td>
                     <td>{User.assocEmail}</td>
-					<td>{User.twentyFourAssoc ? "Yes" : "No"}</td>
+                    <td>{User.twentyFourAssoc ? "Yes" : "No"}</td>
                     <td>{User.twentyFourManager ? "Yes" : "No"}</td>
                 </tr>
             );
         });
+        console.log(assocInterviewRows);
 
+        if (this.state.redirect) {
+            this.updateRedirecrt(false)
+            return <Redirect push to="/interview/report/24hour/charts" />;
+        }
         return (
-            <div>
+            <div className='img-fluid'>
 
 
-                <div className='tableholder3'>
-                 
-        <h1><b>  Interviews: 24 Hour Notice  </b> </h1>
+                <div className='tableholder3 scrollX scrollY'>
+
+                    <h1><b>  Interviews  </b> </h1>
+                    <h1><b> 24 Hour Notice </b> </h1>
                     {/* <table> */}
 
-         
-                    <table className = 'table table-striped'>
-                        
-                        <thead> 
-                            
-                            {/* black lines on screen is the thread */}
-                            <tr>
-                                <th  scope="col">  Name  </th>
-                                <th  scope="col">  Email  </th>
-                                <th  scope="col">  Associate's Claim  </th>
-                                <th  scope="col">  Manager's Claim  </th>
-                                {/* <th scope= 'row'> Claim  </th> */}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {assocInterviewRows}
-                        </tbody>
-                    </table>
+                    <div className="scrollX scrollY">
+                        <table className='table table-striped'>
+
+                            <thead>
+
+                                <tr>
+                                    <th scope="col">  Name  </th>
+                                    <th scope="col">  Email  </th>
+                                    <th scope="col">  Associate's Claim  </th>
+                                    <th scope="col">  Manager's Claim  </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {assocInterviewRows}
+                            </tbody>
+                        </table>
+                    </div>
                     <ReactPaginate
                         previousLabel={'Prev'}
                         nextLabel={'Next'}
@@ -118,13 +133,19 @@ export class interview24Request extends React.Component<any, any> {
                         previousClassName={'page-item cursor-hover justify-content-center'}
                         previousLinkClassName={'paginate-previous page-link no-select'}
                     />
+
                 </div>
-                <div className = {"paginateddata"}>
+
+
+                <div>
+                    <button className="btn btn-lg btn-primary btn-block" onClick={() => this.updateRedirecrt(true)}>Visual Data</button>
+                </div>
+
+                {/* <div className = {""}>
                     <Link to="/interview/report/24hour" >Form Data</Link>
-                </div>
-                <div className = {"visualdata"}>
-                    <Link to="/interview/report/24hour/charts" >Visual Data</Link>
-                </div>
+        
+                </div> */}
+        
             </div>
         );
     }

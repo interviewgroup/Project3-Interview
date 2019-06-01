@@ -1046,14 +1046,21 @@ Fa Circle
 }
 
 .paginateddata{
-  left:25%;
+  position:relative;
  // top: 80%;
-  bottom: 50%;
+ bottom: -102.7px;
+  width: 50%;
+  left: -30px;
+  
  
 }
 
  .visualdata{
-  left:55%;
+  position:relative;
+  //left:55%;
+  width: 50%;
+  left: 300px;
+  bottom: -50px;
  // top: 80%;
-  bottom: 50%;
+  //bottom: 50%;
 }

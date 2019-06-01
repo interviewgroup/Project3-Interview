@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: gateway-server
+
+    
+zuul:
+  routes:
+    users: 
+      path: /users/**
+      serviceId: user-service
+      strip-prefix: false
+    checkins:
+      path: /checkins/**
+      serviceId: checkin-service
+      strip-prefix: false
+    cohorts:
+      path: /cohorts/**
+      serviceId: user-service
+      strip-prefix: false  
+    cognito:
+      path: /cognito/**
+      url: https://7i6rudc3m2.execute-api.us-east-1.amazonaws.com/uat/
+      strip-prefix: false
+  sensitive-headers:
+  
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8888/eureka/
+    eureka-server-read-timeout-seconds: 100
+  
+ribbon:
+  eureka:
+    enabled: true
+  ReadTimeout: 60000
+  ConnectTimeout: 100000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 900000
+
+
+  
+server:
+  port: 8765
+
+
+
+  

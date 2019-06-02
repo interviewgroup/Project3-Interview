@@ -119,12 +119,10 @@ export class FeedbackReportForm extends React.Component<any, any> {
                     <Link to="/interview/report/feedback" >Form Data</Link>
 
                 </div> */}
-
+                <FeedbackChartComponent chart1={this.associateC} chart2={this.managerC} chartAction1={getInfoAssociate} chartAction2={getInfoManager} canvas1={setCanvasAssociate} canvas2={setCanvasManager} />
                 <div>
                     <button className="btn btn-lg btn-primary btn-block" onClick={() => this.updateRedirecrt(true)}>Form Data</button>
                 </div>
-                <FeedbackChartComponent chart1={this.associateC} chart2={this.managerC} chartAction1={getInfoAssociate} chartAction2={getInfoManager} canvas1={setCanvasAssociate} canvas2={setCanvasManager} />
-
             </React.Fragment>
         );
     }

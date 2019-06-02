@@ -110,17 +110,14 @@ export class JDReportForm extends React.Component<any, any> {
 
         return ( 
             <React.Fragment>
-                <h1><b>Job Description Information</b></h1>
+              
                 {/* <div className = {""}>
                     <Link to="/interview/report/jobDesc" >Form Data</Link>
                 </div> */}
-
+                <ChartComponent chart1 = {this.associateC} chartAction1 = {getInfoJD} canvas1 = {setCanvasJD}/>
                 <div>
                     <button className="btn btn-lg btn-primary btn-block" onClick={() => this.updateRedirecrt(true)}>Form Data</button>
                 </div>
-
-           
-                <ChartComponent chart1 = {this.associateC} chartAction1 = {getInfoJD} canvas1 = {setCanvasJD}/>
             </React.Fragment>
 			
         );

@@ -131,16 +131,16 @@ export class ReportForm extends React.Component<any, any> {
 
         return ( 
             <React.Fragment>
-                <h1><b>Interviews receiving 24 Hour Notice</b></h1>
+                <h1><b>Interviews 24 Hour Notice</b></h1>
 
                  {/* <div className = {""}>
                     <Link to="/interview/report/24hour" >Paginated Data</Link>
                 </div> */}
-                
-<div>
-                    <button className="btn btn-lg btn-primary btn-block" onClick={() => this.updateRedirecrt(true)}>Form Data</button>
-                </div>
+
                 <ChartComponent chart1 = {this.associateC} chart2 = {this.managerC} chartAction1 = {getInfoAssociate} chartAction2 = {getInfoManager} canvas1 = {setCanvasAssociate} canvas2 = {setCanvasManager}/>
+                <div>
+                <button className="btn btn-lg btn-primary btn-block" onClick={() => this.updateRedirecrt(true)}>Form Data</button>
+                </div>
             </React.Fragment>
         );
     }

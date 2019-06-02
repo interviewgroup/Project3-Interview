@@ -28,7 +28,9 @@ export interface InterviewListProps {
 
 export interface InterviewListState {
     direction : string,
-    loaded : boolean
+    loaded : boolean,
+    tableHeaderId: string,
+    previousTableHeaderId: string
 }
 
 // More comments 
@@ -37,7 +39,9 @@ class InterviewList extends React.Component<InterviewListProps, InterviewListSta
         super(props);
         this.state = {
             direction : this.props.direction,
-            loaded : false
+            loaded : false,
+            tableHeaderId: '0',
+            previousTableHeaderId: '1' //init diff values of tableHeaderId and previousTableHeaderId to start DESC sorting logic
         }
     }
 
@@ -74,11 +78,36 @@ class InterviewList extends React.Component<InterviewListProps, InterviewListSta
         })
     }
 
-    changeOrderCriteria = (event: any) => {
-        this.props.getInterviewPages(
+    changeOrderCriteria = async (event: any) => {
+        await this.setState({
+            tableHeaderId: event.currentTarget.id
+        });
+        console.log(`tableHeaderId=${this.state.tableHeaderId}`);
+        console.log(`previousTableHeaderId=${this.state.previousTableHeaderId}`);
+        if(this.state.tableHeaderId === this.state.previousTableHeaderId) { //if click same header -> toggle ASC/DESC
+            if(this.state.direction === 'ASC') {
+                this.setState({
+                    direction: 'DESC'
+                });
+            } else {
+                this.setState({
+                    direction: 'ASC'
+                });
+            }
+        } else { //if click diff header -> sort ASC
+            this.setState({
+                direction: 'ASC'
+            })
+        }
+        this.setState({
+            previousTableHeaderId: this.state.tableHeaderId
+        });
+        console.log(`previousTableHeaderId after setState = ${this.state.previousTableHeaderId}`);
+        await this.props.getInterviewPages(
             0,
             this.props.pageSize,
-            event.currentTarget.id,
+            // event.currentTarget.id,
+            this.state.tableHeaderId,
             this.state.direction);
     }
 
@@ -124,43 +153,52 @@ class InterviewList extends React.Component<InterviewListProps, InterviewListSta
         const roles = (store.getState().managementState.auth.currentUser.roles);
         const isAdmin = (roles.includes('admin') || roles.includes('staging-manager') || roles.includes('trainer'));
         return ( 
+            <div className='container'>
+            <div className='row'>
             <div>
-                <div className='tableholder'>
-                    <table>
-                        <thead>
+                <div className='table-responsive-xl'>
+                    <table className='table table-striped mx-auto w-auto'>
+                        <thead className='rev-background-color'>
                             <tr>
                                 {isAdmin? <th>Reviewed</th> : <></>}
-                                <th id='associateEmail' onClick={this.changeOrderCriteria}>Associate Email 
-                                    <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>
-                                    <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>
+                                <th id='associateEmail' className='cursor-hover' onClick={this.changeOrderCriteria}>
+                                    {this.state.tableHeaderId==='associateEmail' && this.state.direction==='DESC' && <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>}
+                                    {this.state.tableHeaderId==='associateEmail' && this.state.direction==='ASC' && <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>}
+                                    Associate Email 
                                 </th>
-                                <th id='managerEmail' onClick={this.changeOrderCriteria}>Manager Email 
-                                    <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>
-                                    <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>
+                                <th id='managerEmail' className='cursor-hover' onClick={this.changeOrderCriteria}>
+                                    {this.state.tableHeaderId==='managerEmail' && this.state.direction==='DESC' && <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>}
+                                    {this.state.tableHeaderId==='managerEmail' && this.state.direction==='ASC' && <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>}
+                                    Manager Email 
                                 </th>
-                                <th id='place' onClick={this.changeOrderCriteria}>Location 
-                                    <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>
-                                    <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>
+                                <th id='place' className='cursor-hover' onClick={this.changeOrderCriteria}>
+                                    {this.state.tableHeaderId==='place' && this.state.direction==='DESC' && <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>}
+                                    {this.state.tableHeaderId==='place' && this.state.direction==='ASC' && <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>}
+                                    Location 
                                 </th>
-                                <th id='client' onClick={this.changeOrderCriteria}>Client 
-                                    <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>
-                                    <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>
+                                <th id='client' className='cursor-hover' onClick={this.changeOrderCriteria}>
+                                    {this.state.tableHeaderId==='client' && this.state.direction==='DESC' && <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>}
+                                    {this.state.tableHeaderId==='client' && this.state.direction==='ASC' && <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>}
+                                    Client 
                                 </th>
-                                <th id='notified' onClick={this.changeOrderCriteria}>Date Notified 
-                                    <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>
-                                    <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>
+                                <th id='notified' className='cursor-hover' onClick={this.changeOrderCriteria}>
+                                    {this.state.tableHeaderId==='notified' && this.state.direction==='DESC' && <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>}
+                                    {this.state.tableHeaderId==='notified' && this.state.direction==='ASC' && <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>}
+                                    Date Notified 
                                 </th>
-                                <th id='scheduled' onClick={this.changeOrderCriteria}>Date Scheduled 
-                                    <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>
-                                    <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>
+                                <th id='scheduled' className='cursor-hover' onClick={this.changeOrderCriteria}>
+                                    {this.state.tableHeaderId==='scheduled' && this.state.direction==='DESC' && <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>}
+                                    {this.state.tableHeaderId==='scheduled' && this.state.direction==='ASC' && <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>}
+                                    Date Scheduled 
                                 </th>
-                                <th id='reviewed' onClick={this.changeOrderCriteria}>Date Reviewed 
-                                    <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>
-                                    <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>
+                                <th id='reviewed' className='cursor-hover' onClick={this.changeOrderCriteria}>
+                                    {this.state.tableHeaderId==='reviewed' && this.state.direction==='DESC' && <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>}
+                                    {this.state.tableHeaderId==='reviewed' && this.state.direction==='ASC' && <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>}
+                                    Date Reviewed 
                                 </th>
-                                <th id='associateInput' onClick={this.changeOrderCriteria}>Associate Feedback 
-                                    <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>
-                                    <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/>
+                                <th id='associateInput' onClick={this.changeOrderCriteria}>Associate Input 
+                                    {/* <IoIosArrowDown className='cursor-hover' onClick={this.changeOrderDesc}/>
+                                    <IoIosArrowUp className='cursor-hover' onClick={this.changeOrderAsc}/> */}
                                 </th>
                                 <th>
                                     Interview Feedback
@@ -192,15 +230,26 @@ class InterviewList extends React.Component<InterviewListProps, InterviewListSta
                             })}
                         </tbody>
                     </table>
-                    <form className='justify-content-center'>
-                        <Label className={'justify-content-center'}>Page Size: </Label>
-                        <select value={this.props.pageSize} onChange={this.changePageSize} className={'justify-content-center'}>
+                    <form>
+                        <div className='form-row'>
+                        <div className='col'>
+                        <Label>Page Size: </Label>
+                        </div>
+                        <div className='col'>
+                        <select value={this.props.pageSize} onChange={this.changePageSize} className='form-control'>
                             <option value={5} className={'justify-content-center'}>5</option>
                             <option value={10} className={'justify-content-center'}>10</option>
                             <option value={25} className={'justify-content-center'}>25</option>
                             <option value={50} className={'justify-content-center'}>50</option>
                         </select>
+                        </div>
+                        <div className='col-10'>
+                            <label></label>
+                        </div>
+                        </div>
                     </form>
+                </div>
+                </div>
                 </div>
                 <ReactPaginate
                 previousLabel={'Prev'}
@@ -211,6 +260,7 @@ class InterviewList extends React.Component<InterviewListProps, InterviewListSta
                 pageCount={this.props.numberOfPages}
                 marginPagesDisplayed={2}
                 pageRangeDisplayed={5}
+                forcePage={this.props.currentPage}
                 onPageChange={this.handlePageClick}
                 containerClassName={'pagination page-navigator justify-content-center'}
                 activeClassName={'active'}
